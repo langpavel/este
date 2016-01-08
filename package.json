@@ -1,9 +1,9 @@
 {
-  "name": "Este",
+  "name": "ServerAdmin",
   "authors": [
-    "Daniel Steigerwald"
+    "Pavel Lang"
   ],
-  "description": "Dev stack and starter kit for React universal web apps",
+  "description": "Server Administrator Tool",
   "private": true,
   "//": "Use gulp for dev etc. Note postinstall, it's for Heroku",
   "scripts": {
