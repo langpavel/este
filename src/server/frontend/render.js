@@ -19,13 +19,14 @@ export default function render(req, res, next) {
       isMobile: ['phone', 'tablet'].indexOf(req.device.type) > -1
     }
   };
-  const store = configureStore({initialState});
+  const history = createMemoryHistory();
+  const location = history.createLocation(req.url);
+  const store = configureStore({initialState, history});
 
-  // Fetch logged in user here because routes may need it. Remember we can use
-  // store.dispatch method.
+  // Fetch logged in user here because routes may need it.
+  // Remember we can use store.dispatch method.
 
   const routes = createRoutes(() => store.getState());
-  const location = createMemoryHistory().createLocation(req.url);
 
   match({routes, location}, async (error, redirectLocation, renderProps) => {
 
