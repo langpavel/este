@@ -9,11 +9,13 @@ import intl from '../intl/reducer';
 import todos from '../todos/reducer';
 import ui from '../ui/reducer';
 import users from '../users/reducer';
+import {routeReducer as routing} from 'redux-simple-router';
 
 const appReducer = combineReducers({
   auth,
   device,
   intl,
+  routing,
   todos,
   ui,
   users

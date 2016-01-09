@@ -7,6 +7,7 @@ import promiseMiddleware from 'redux-promise-middleware';
 import shortid from 'shortid';
 import validate from './validate';
 import {applyMiddleware, compose, createStore} from 'redux';
+import {syncHistory} from 'redux-simple-router';
 
 const BROWSER_DEVELOPMENT =
   process.env.NODE_ENV !== 'production' &&
@@ -14,7 +15,7 @@ const BROWSER_DEVELOPMENT =
 
 // TODO: Add example for browser/native redux-storage.
 // import storage from 'redux-storage';
-export default function configureStore({deps, /* engine, */ initialState}) {
+export default function configureStore({deps, /* engine, */ initialState, history}) {
 
   // Inject services for actions.
   const getUid = () => shortid.generate();
@@ -30,6 +31,13 @@ export default function configureStore({deps, /* engine, */ initialState}) {
       promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
     })
   ];
+
+  let historyMiddleware;
+  if (history) {
+    historyMiddleware = syncHistory(history);
+    //historyMiddleware = null;
+    middleware.push(historyMiddleware);
+  }
 
   // TODO: Add redux-storage example.
   // if (engine) {
@@ -55,6 +63,10 @@ export default function configureStore({deps, /* engine, */ initialState}) {
     ? compose(applyMiddleware(...middleware), window.devToolsExtension())
     : applyMiddleware(...middleware);
   const store = createReduxStore(createStore)(appReducer, initialState);
+
+  if (historyMiddleware) {
+    historyMiddleware.syncHistoryToStore(store);
+  }
 
   // Enable hot reload where available.
   if (module.hot) {

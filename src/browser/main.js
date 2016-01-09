@@ -14,13 +14,14 @@ import {Provider} from 'react-redux';
 const app = document.getElementById('app');
 const engine = createEngine('este-app');
 const initialState = window.__INITIAL_STATE__;
-const store = configureStore({engine, initialState});
+const history = createBrowserHistory();
+const store = configureStore({engine, initialState, history});
 const routes = createRoutes(store.getState);
 
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider>
-      <Router history={createBrowserHistory()}>
+      <Router history={history}>
         {routes}
       </Router>
     </IntlProvider>

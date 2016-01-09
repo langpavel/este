@@ -7,7 +7,7 @@ import mapDispatchToProps from '../../common/app/mapDispatchToProps';
 import mapStateToProps from '../../common/app/mapStateToProps';
 import routes from '../routes';
 import styles from './styles';
-import {connect} from 'react-redux/native';
+import {connect} from 'react-redux';
 
 class App extends Component {
 

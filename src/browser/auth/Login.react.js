@@ -34,10 +34,12 @@ export default class Login extends Component {
   // TODO: Use redux-react-router.
   redirectAfterLogin() {
     const {history, location} = this.props;
+    const {actions} = this.props;
+
     if (location.state && location.state.nextPathname)
-      history.replaceState(null, location.state.nextPathname);
+      actions.replace(location.state.nextPathname);
     else
-      history.replaceState(null, '/');
+      actions.replace('/');
   }
 
   render() {
