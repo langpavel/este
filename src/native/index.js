@@ -2,7 +2,7 @@ import 'react-native-browser-polyfill';
 import App from './app/App.react';
 import React, {AppRegistry, Component, Platform} from 'react-native';
 import configureStore from '../common/configureStore';
-import {Provider} from 'react-redux/native';
+import {Provider} from 'react-redux';
 import {setPlatform} from '../common/device/actions';
 
 // TODO: We can't use <IntlProvider> yet because it's not ready for
