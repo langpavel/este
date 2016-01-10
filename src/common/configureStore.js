@@ -35,7 +35,6 @@ export default function configureStore({deps, /* engine, */ initialState, histor
   let historyMiddleware;
   if (history) {
     historyMiddleware = syncHistory(history);
-    //historyMiddleware = null;
     middleware.push(historyMiddleware);
   }
 

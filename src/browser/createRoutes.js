@@ -15,7 +15,8 @@ export default function createRoutes(getState) {
   const requireAuth = (nextState, replaceState) => {
     const loggedInUser = getState().users.viewer;
     if (!loggedInUser) {
-      replaceState({nextPathname: nextState.location.pathname}, '/login');
+      const nextPath = `${nextState.location.pathname}${nextState.location.search}`;
+      replaceState({statusCode: 307}, '/login?' + nextPath);
     }
   };
 

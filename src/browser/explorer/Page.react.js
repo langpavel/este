@@ -9,7 +9,7 @@ export default class Page extends Component {
   };
 
   render() {
-    const {msg} = this.props;
+    // const {msg} = this.props;
     const title = 'Explorer';
 
     return (

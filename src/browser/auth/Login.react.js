@@ -9,7 +9,6 @@ export default class Login extends Component {
   static propTypes = {
     actions: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     msg: PropTypes.object.isRequired
   };
@@ -33,11 +32,11 @@ export default class Login extends Component {
 
   // TODO: Use redux-react-router.
   redirectAfterLogin() {
-    const {history, location} = this.props;
+    const {location} = this.props;
     const {actions} = this.props;
 
-    if (location.state && location.state.nextPathname)
-      actions.replace(location.state.nextPathname);
+    if (location.search && location.search.length > 1)
+      actions.replace(location.search.replace(/^\?/, ''));
     else
       actions.replace('/');
   }

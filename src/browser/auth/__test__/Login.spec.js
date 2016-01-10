@@ -26,17 +26,15 @@ describe('Login component', () => {
   let form;
   let inputs;
   let loginAction;
+  let replaceAction;
   let loginComponent;
-  let replaceState;
   let sandbox;
 
   function componentProps() {
     return {
       actions: {
-        login: loginAction
-      },
-      history: {
-        replaceState
+        login: loginAction,
+        replace: replaceAction
       },
       location: {},
       msg: msg,
@@ -51,7 +49,7 @@ describe('Login component', () => {
         promise: Promise.resolve({})
       }
     });
-    replaceState = sandbox.spy();
+    replaceAction = sandbox.stub();
 
     loginComponent = TestUtils.renderIntoDocument(<Login {...componentProps()} />);
     inputs = TestUtils.scryRenderedDOMComponentsWithTag(loginComponent, 'input');
@@ -79,7 +77,7 @@ describe('Login component', () => {
 
     await loginAction();
 
-    expect(replaceState.calledOnce).to.be.true;
-    expect(replaceState.calledWithExactly(null, '/')).to.be.true;
+    expect(replaceAction.calledOnce).to.be.true;
+    expect(replaceAction.calledWithExactly('/')).to.be.true;
   });
 });
