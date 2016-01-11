@@ -1,5 +1,3 @@
-import express from 'express';
-import shortid from 'shortid';
 import fs from 'fs';
 import path from 'path';
 import Promise from 'bluebird';
@@ -18,7 +16,7 @@ export default async function ls(req, res) {
       realPath,
       entries
     });
-  } catch(err) {
+  } catch (err) {
     return handleError(res, err);
   }
 }
