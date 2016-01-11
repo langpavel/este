@@ -9,7 +9,8 @@
     "production": {
       "plugins": [
         "transform-react-constant-elements",
-        "transform-react-inline-elements"
+        "transform-react-inline-elements",
+        "babel-plugin-transform-decorators-legacy"
       ]
     }
   }

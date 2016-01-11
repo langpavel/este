@@ -63,7 +63,7 @@ export default function makeConfig(isDevelopment) {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          plugins: ['transform-runtime', 'add-module-exports'],
+          plugins: ['transform-runtime', 'add-module-exports', 'babel-plugin-transform-decorators-legacy'],
           presets: ['es2015', 'react', 'stage-1'],
           env: {
             development: {
