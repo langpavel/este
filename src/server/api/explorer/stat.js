@@ -39,11 +39,15 @@ export default async function stat(req, res) {
   try {
     const currentPath = normalize(req.params[0].replace(/^\/*/, '//'));
     const stats = {};
+
+    const ts = Date.now();
     const realPath = await getStats(stats, currentPath);
+
     return res.json({
       path: currentPath,
       realPath,
-      stats
+      stats,
+      ts
     });
   } catch (err) {
     return handleError(res, err);

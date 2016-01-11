@@ -10,11 +10,14 @@ export default async function ls(req, res) {
   try {
     const queryPath = path.resolve('/', req.params[0]);
 
+    const ts = Date.now();
     const realPath = await realpathAsync(queryPath);
     const entries = await readdirAsync(realPath);
+
     return res.json({
       realPath,
-      entries
+      entries,
+      ts
     });
   } catch (err) {
     return handleError(res, err);
