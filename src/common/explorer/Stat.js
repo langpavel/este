@@ -1,5 +1,3 @@
-import {Record} from 'immutable';
-
 const UNIX_EPOCH_START_DATE = new Date(0);
 
 const S_IFIFO = 4096;   // 0x1000

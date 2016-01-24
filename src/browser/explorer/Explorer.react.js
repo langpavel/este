@@ -1,14 +1,10 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, {PropTypes} from 'react';
 import Panel from './Panel.react';
-import fetch from '../components/fetch';
-import {fetchDir} from '../../common/explorer/actions';
 
 export default class Explorer extends Component {
 
   static propTypes = {
-    actions: PropTypes.object.isRequired,
     explorer: PropTypes.object.isRequired,
     msg: PropTypes.object.isRequired
   };
@@ -21,7 +17,7 @@ export default class Explorer extends Component {
   // }
 
   render() {
-    const {actions, explorer} = this.props;
+    const {explorer} = this.props;
 
     return (
       <div className="explorer">

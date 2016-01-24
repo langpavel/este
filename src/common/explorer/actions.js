@@ -13,7 +13,6 @@ export const FETCH_STAT_SUCCESS = '@@explorer/FETCH_STAT_SUCCESS';
 export function fetchDir(props) {
   const {path} = props;
   const fetchPath = path.map(encodeURIComponent).join(PATH_SEP);
-  //console.log('fetching dir', fetchPath);
   return ({fetch}) => ({
     type: FETCH_LS,
     payload: {
@@ -28,7 +27,6 @@ export function fetchDir(props) {
 
 export function fetchStat(props) {
   const {path} = props;
-  console.log('fetching stat', path);
   return ({fetch}) => ({
     type: FETCH_STAT,
     payload: {

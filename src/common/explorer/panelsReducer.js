@@ -1,5 +1,5 @@
-import * as actions from './actions';
-import {List, Map, Record, fromJS} from 'immutable';
+// import * as actions from './actions';
+import {List, Record} from 'immutable';
 
 const PanelInfo = Record({
   path: List(),
@@ -20,5 +20,10 @@ const fromJSON = (json) => List(
 export default function panelsReducer(state = initialState, action) {
   if (!List.isList(state)) return fromJSON(state);
 
-  return state;
+  switch (action.type) {
+    default: {
+      return state;
+    }
+  }
+
 }

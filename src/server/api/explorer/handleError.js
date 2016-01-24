@@ -3,7 +3,7 @@ export default function handleError(res, err) {
   const data = {
     error: err.message || err.toString()
   };
-  switch(err.code) {
+  switch (err.code) {
     case 'EACCES':
       return res.status(403).json(data);
     case 'ENOENT':

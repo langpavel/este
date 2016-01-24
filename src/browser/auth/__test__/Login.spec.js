@@ -53,8 +53,7 @@ describe('Login component', () => {
     });
     replaceAction = sandbox.stub();
 
-    const Component = provideRouterContext(Login, {replace});
-    loginComponent = TestUtils.renderIntoDocument(<Component {...componentProps()} />);
+    loginComponent = TestUtils.renderIntoDocument(<Login {...componentProps()} />);
     inputs = TestUtils.scryRenderedDOMComponentsWithTag(loginComponent, 'input');
     button = TestUtils.findRenderedDOMComponentWithTag(loginComponent, 'button');
     form = TestUtils.findRenderedDOMComponentWithTag(loginComponent, 'form');

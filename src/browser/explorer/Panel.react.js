@@ -1,5 +1,4 @@
 import Component from 'react-pure-render/component';
-import Helmet from 'react-helmet';
 import React, {PropTypes} from 'react';
 import fetch from '../components/fetch';
 import {fetchDir} from '../../common/explorer/actions';
@@ -23,31 +22,39 @@ export default class Panel extends Component {
   // }
 
   render() {
-    const {path, explorer, actions} = this.props;
+    const {path, explorer} = this.props;
 
     let components = [
-      <div key='..' fileName={name}>..</div>
+      <div key=".." fileName={name}>..</div>
     ];
 
     const entries = explorer.tree.getIn(pathToStorePath('/', path, 'entries'));
-    console.log('entries', entries);
     if (entries) {
-      components = entries.reduce((components, stat, name) => {
-        const realPath = path;
-        components.push(
-          <Entry
-            key={name}
-            fileName={name}
-            realPath={realPath}
-          />
-        );
-        return components;
-      }, components);
+      components = entries
+        .sortBy(entry => {
+          const stat = entry.get('stat');
+          return stat ? stat.size : 0;
+        })
+        .sortBy(entry => {
+          const stat = entry.get('stat');
+          return stat && stat.isDirectory() ? -1 : 0;
+        })
+        .reduce((components, entry, name) => {
+          components.push(
+            <Entry
+              key={name}
+              fileName={name}
+              path={path}
+              entry={entry}
+            />
+          );
+          return components;
+        }, components);
     }
 
     return (
       <div className="browser-panel">
-        {components || "NOT LOADED"}
+        {components || 'NOT LOADED'}
       </div>
     );
   }
