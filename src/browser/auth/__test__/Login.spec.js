@@ -28,8 +28,8 @@ describe('Login component', () => {
   let form;
   let inputs;
   let loginAction;
-  let replaceAction;
   let loginComponent;
+  let replaceAction;
   let sandbox;
 
   function componentProps() {
@@ -53,7 +53,8 @@ describe('Login component', () => {
     });
     replaceAction = sandbox.stub();
 
-    loginComponent = TestUtils.renderIntoDocument(<Login {...componentProps()} />);
+    const Component = provideRouterContext(Login, {replace});
+    loginComponent = TestUtils.renderIntoDocument(<Component {...componentProps()} />);
     inputs = TestUtils.scryRenderedDOMComponentsWithTag(loginComponent, 'input');
     button = TestUtils.findRenderedDOMComponentWithTag(loginComponent, 'button');
     form = TestUtils.findRenderedDOMComponentWithTag(loginComponent, 'form');

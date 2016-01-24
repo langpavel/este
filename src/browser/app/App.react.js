@@ -25,6 +25,9 @@ class App extends Component {
       // Pass data-pathname to allow route specific styling.
       <div className="page" data-pathname={pathname}>
         <Helmet
+          link={[
+            {rel: 'shortcut icon', href: require('./favicon.ico')}
+          ]}
           meta={[{
             name: 'description',
             content: 'Server Administrator'

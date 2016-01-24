@@ -12,11 +12,11 @@ import {IndexRoute, Route} from 'react-router';
 
 export default function createRoutes(getState) {
 
-  const requireAuth = (nextState, replaceState) => {
+  const requireAuth = (nextState, replace) => {
     const loggedInUser = getState().users.viewer;
     if (!loggedInUser) {
       const nextPath = `${nextState.location.pathname}${nextState.location.search}`;
-      replaceState({statusCode: 307}, '/login?' + nextPath);
+      replace({statusCode: 307}, '/login?' + nextPath);
     }
   };
 

@@ -5,35 +5,48 @@
 [![Dependency Status](https://david-dm.org/este/este.svg)](https://david-dm.org/este/este)
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-> The best dev stack and starter kit for React universal web apps.
+> Happily maintained dev stack and starter kit for React universal apps. One stack for browser, server, mobile.
 
-> Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), use laser focused libraries and design patterns instead.
+> Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), use laser focused [libraries](https://github.com/este/este#libraries) and design patterns instead.
 
 ## Prerequisites
 
-- [node.js](http://nodejs.org) (Node 5 with npm 3 is highly recommended).
+- [node.js](http://nodejs.org) (Node 5 with npm 3 is required).
 - [gulp](http://gulpjs.com/) (`npm install -g gulp`)
 
-If you are using different node versions on your machine, use `nvm` to manage them.
+If you are using different node versions on your machine, use [nvm](https://github.com/creationix/nvm) to manage them.
 
 ## Techniques
 
-- Universal JavaScript dev stack for browser, server, mobile.
-- [React](http://facebook.github.io/react/) with server side rendering on [expressjs](http://expressjs.com/) backend.
-- [React Native](https://facebook.github.io/react-native/) for iOS and Android.
-- [Redux](http://rackt.github.io/redux/) [Flux](https://facebook.github.io/flux/) with atomic [immutable.js](http://facebook.github.io/immutable-js) app state.
-- Functional works: App state snapshots, time travel, hot reload everything.
-- ECMAScript 2015+ with [babeljs.io](https://babeljs.io/). [JSX](http://facebook.github.io/react/docs/jsx-in-depth.html) and [Flowtype](http://flowtype.org/) syntax. Sourcemaps enabled.
-- [react-router](https://github.com/rackt/react-router) for isomorphic routing.
-- Universal / isomorphic data fetching example.
-- Well tuned [webpack](http://webpack.github.io/) dev stack.
-- [eslint](http://eslint.org/) ([Sublime Text 3 integration](https://github.com/steida/este/wiki/Recommended-Sublime-Text-3-settings#how-to-setup-the-eslint-for-st3))
-- Localization with [formatjs.io](http://formatjs.io/).
-- Simple yet powerfull sync/async validation based on [chriso/validator.js](https://github.com/chriso/validator.js)
-- LESS, SASS, Stylus, or plain CSS with [autoprefixer](https://github.com/postcss/autoprefixer).
-- Long Term Caching.
-- [React Helmet](https://github.com/nfl/react-helmet) for handling Title and Meta changes on server and client
-- And much more.
+- Truly universal architecture
+  - code shared across platforms
+  - server side rendering
+  - isomorphic data fetching
+  - prerender for static hosting
+- Functional works: immutability, hot reloading, time travel
+- Test driven development ready
+- Well tuned dev stack
+
+## Libraries
+
+- [React](http://facebook.github.io/react/) and [React Native](https://facebook.github.io/react-native/) 
+- [Redux](http://rackt.github.io/redux/)
+- [babeljs](https://babeljs.io/)
+- [immutablejs](http://facebook.github.io/immutable-js)
+- [react-router](https://github.com/rackt/react-router)
+- [webpack](http://webpack.github.io/)
+- [expressjs](http://expressjs.com/)
+- [eslint](http://eslint.org/)
+- [formatjs](http://formatjs.io/) Internationalize your web apps on the client & server.
+- [React Helmet](https://github.com/nfl/react-helmet) A document head manager for React.
+- [webpack-isomorphic-tools](https://github.com/halt-hammerzeit/webpack-isomorphic-tools)
+- [chriso/validator.js](https://github.com/chriso/validator.js) For simple yet powerfull Este sync/async validation.
+- [bluebird](https://github.com/petkaantonov/bluebird) Because it's better than native implementation.
+- [mochajs](https://mochajs.org/) The fun, simple, flexible JavaScript test framework.
+- LESS, SASS, Stylus, or plain CSS with [autoprefixer](https://github.com/postcss/autoprefixer)
+- [shortid](https://github.com/dylang/shortid) Short id generator. Url-friendly. Non-predictable.
+- [gulp](http://gulpjs.com/) For cross platform scripting.
+- And much more. Check source code.
 
 ## Installing
 
@@ -49,11 +62,24 @@ npm install
 - point your browser to [localhost:8000](http://localhost:8000)
 - build something beautiful
 
+React Native: [facebook.github.io/react-native/docs/getting-started.html](https://facebook.github.io/react-native/docs/getting-started.html)
+
+
 ## Dev Tasks
 
 - `gulp` run web app in development mode
 - `gulp -p` run web app in production mode
-- `gulp test` test app
+- `gulp mocha` run mocha unit tests
+- `gulp mocha-watch` continuous test running for TDD
+- `gulp eslint` eslint
+
+## Production Tasks
+
+- `gulp build -p` build app for production, for example for [Heroku](https://dashboard.heroku.com/)
+- `npm test` run all checks and tests
+- `node src/server` start app, remember to set NODE_ENV=production
+- `gulp to-html` render app to HTML for static hosting like [Firebase](https://www.firebase.com/features.html#features-hosting)
+
 
 ## Documentation
 
@@ -63,10 +89,8 @@ So you decided to give a chance to this web stack, but where is documentation? C
 
 ## Links
 
-- [wiki: Recommended React Components](https://github.com/steida/este/wiki/Recommended-React-Components)
-- [wiki: Recommended Sublime Text 3 Packages](https://github.com/steida/este/wiki/Recommended-Sublime-Text-3-settings)
+- [wiki](https://github.com/este/este/wiki)
 - [twitter.com/estejs](https://twitter.com/estejs)
-- [github.com/enaqx/awesome-react](https://github.com/enaqx/awesome-react)
 
 ## Windows
 
@@ -84,7 +108,7 @@ Thanks to [Ryanlanciaux](http://ryanlanciaux.github.io/blog/2014/08/02/using-jes
 - Install Redux devtools Chrome extension [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension)
 - With functional programming ([SOLID: the next step is Functional](http://blog.ploeh.dk/2014/03/10/solid-the-next-step-is-functional)), we don't need DI containers. We can use plain old [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/). Check `injectDependencies` middleware in `configureStore`.
 - Learn immutable.js, for example [Seq](https://github.com/facebook/immutable-js#lazy-seq). Handy even for native arrays and objects. For example, get object values: `Seq(RoomType).toSet().toJS()`
-- Recommended editors are [sublimetext](http://www.sublimetext.com/) and [atom.io](https://atom.io) ([tips](https://github.com/steida/atom-io-settings)).
+- Recommended editors are [sublimetext](http://www.sublimetext.com/) ([tips](https://github.com/este/este/wiki/Recommended-Sublime-Text-3-settings)) and [atom.io](https://atom.io).
 
 ## FAQ
 
@@ -106,7 +130,7 @@ Yes it does. Este is agnostic of what you use in your backend and is completely 
 Yes. Este makes little assumptions about your stack, and passing every bit of needed info through props. This is not a framework, nothing prevents you from picking the bits you're interested in.
 
 #### Why Este is pure and why we have to pass data through props?
-Pure means no side effects. Programming without side effects rocks. It allows us to hot reload everything and testing is much easier as well. When component renders only data passed through props, [shouldComponentUpdate](https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate) can be implemented [only once](https://github.com/este/este/blob/master/src/native/components/Component.react.js#L11) per whole app. One can say it's verbose, but it isn't. It's explicit. And remember, we have to pass only data going to be rendered. Actions have access to app state.
+Pure means no side effects. Programming without side effects rocks. It allows us to hot reload everything and testing is much easier as well. When component renders only data passed through props, [shouldComponentUpdate](https://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate) can be implemented [only once](https://github.com/este/este/blob/master/src/native/components/Component.react.js#L11) per whole app. One can say it's verbose, but it isn't. It's explicit. And remember, we have to pass only data going to be rendered, because actions have access to app state.
 
 #### How React Native is used in this project?
 Just as regular React Native project created via `react-native init AwesomeProject`. We can easily share modules across platforms. But remember to check [gulpfile.babel.js](https://github.com/este/este/blob/master/gulpfile.babel.js) for details.

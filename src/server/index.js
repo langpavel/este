@@ -1,14 +1,18 @@
 require('babel-register');
 
-const serverConfig = require('./config');
+const Bluebird = require('bluebird');
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
-const webpackIsomorphicAssets = require('../../webpack/assets');
 const rootDir = require('path').resolve(__dirname, '..', '..');
+const serverConfig = require('./config');
+const webpackIsomorphicAssets = require('../../webpack/assets');
 
 if (!process.env.NODE_ENV)
   throw new Error(
     'Environment variable NODE_ENV must be set to development or production.'
   );
+
+// http://bluebirdjs.com/docs/why-bluebird.html
+global.Promise = Bluebird;
 
 // http://formatjs.io/guides/runtime-environments/#polyfill-node
 if (global.Intl) {

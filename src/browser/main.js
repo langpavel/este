@@ -1,30 +1,34 @@
+import Bluebird from 'bluebird';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Router from 'react-router';
 import configureStore from '../common/configureStore';
-import { browserHistory as history} from 'react-router';
 import createEngine from 'redux-storage/engines/localStorage';
 import createRoutes from './createRoutes';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
+import {browserHistory} from 'react-router';
 
-if (process.env.NODE_ENV === 'development' && process.env.IS_BROWSER) {
+if (process.env.NODE_ENV === 'development') {
   require('./devTools.js');
 }
 
 // TODO: Add app storage example.
 // import storage from 'redux-storage';
 
+// http://bluebirdjs.com/docs/why-bluebird.html
+window.Promise = Bluebird;
+
 const app = document.getElementById('app');
 const engine = createEngine('este-app');
 const initialState = window.__INITIAL_STATE__;
-const store = configureStore({engine, initialState, history});
+const store = configureStore({engine, initialState, history: browserHistory});
 const routes = createRoutes(store.getState);
 
 ReactDOM.render(
   <Provider store={store}>
     <IntlProvider>
-      <Router history={history}>
+      <Router history={browserHistory}>
         {routes}
       </Router>
     </IntlProvider>
