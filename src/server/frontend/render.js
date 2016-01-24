@@ -10,7 +10,7 @@ import serialize from 'serialize-javascript';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 import {RouterContext, match} from 'react-router';
-import {createMemoryHistory} from 'history';
+import createMemoryHistory from 'react-router/lib/createMemoryHistory';
 
 const fetchComponentDataAsync = async (dispatch, renderProps) => {
   const {components, location, params} = renderProps;

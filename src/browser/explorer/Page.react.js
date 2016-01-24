@@ -1,6 +1,7 @@
 import Component from 'react-pure-render/component';
 import Helmet from 'react-helmet';
 import React, {PropTypes} from 'react';
+import Explorer from './Explorer.react';
 
 export default class Page extends Component {
 
@@ -15,7 +16,7 @@ export default class Page extends Component {
     return (
       <div className="explorer-page">
         <Helmet title={title} />
-        PANELS
+        <Explorer {...this.props} />
       </div>
     );
   }

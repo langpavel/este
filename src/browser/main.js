@@ -2,11 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Router from 'react-router';
 import configureStore from '../common/configureStore';
-import createBrowserHistory from 'history/lib/createBrowserHistory';
+import { browserHistory as history} from 'react-router';
 import createEngine from 'redux-storage/engines/localStorage';
 import createRoutes from './createRoutes';
 import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
+
+if (process.env.NODE_ENV === 'development' && process.env.IS_BROWSER) {
+  require('./devTools.js');
+}
 
 // TODO: Add app storage example.
 // import storage from 'redux-storage';
@@ -14,7 +18,6 @@ import {Provider} from 'react-redux';
 const app = document.getElementById('app');
 const engine = createEngine('este-app');
 const initialState = window.__INITIAL_STATE__;
-const history = createBrowserHistory();
 const store = configureStore({engine, initialState, history});
 const routes = createRoutes(store.getState);
 

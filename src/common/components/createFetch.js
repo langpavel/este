@@ -17,11 +17,11 @@ export default function createFetch(React, Component) {
       // This enables client side fetching, method is called only in browser.
       componentDidMount() {
         // Dispatch is injected by react-redux.
-        // React router injects location and params for every routed component.
-        const {dispatch, location, params} = this.props;
+        const {dispatch} = this.props;
 
+        // React router injects location and params for every routed component.
         actions.forEach(action =>
-          dispatch(action({location, params}))
+          dispatch(action(this.props))
         );
       }
 
