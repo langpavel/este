@@ -37,8 +37,8 @@ export default function configureStore({deps, /* engine, */ initialState, histor
       now: () => Date.now(),
       validate
     }),
-    promiseMiddleware(
-      {promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
+    promiseMiddleware({
+      promiseTypeSuffixes: ['START', 'SUCCESS', 'ERROR']
     })
   ];
 
