@@ -5,13 +5,14 @@
   ],
   "description": "Server Administrator Tool",
   "private": true,
-  "//": "Use gulp for dev etc. Note postinstall, it's for Heroku",
+  "//": "Use gulp for dev. It's cross platform.",
   "scripts": {
+    "install": "gulp fix-react-native",
     "postinstall": "gulp build --production",
     "test": "gulp test"
   },
   "engines": {
-    "node": "5.3.0"
+    "node": "5.5.0"
   },
   "dependencies": {
     "autoprefixer": "^6.1.0",
@@ -42,7 +43,7 @@
     "css-loader": "^0.23.0",
     "del": "^2.1.0",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^3.0.2",
+    "eslint-config-airbnb": "^4.0.0",
     "eslint-loader": "^1.1.1",
     "eslint-plugin-babel": "^3.0.0",
     "eslint-plugin-import": "^0.12.1",
@@ -51,6 +52,7 @@
     "express": "^4.13.3",
     "express-device": "^0.4.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "fbjs": "^0.6.1",
     "file-loader": "^0.8.1",
     "gulp": "^3.9.0",
     "gulp-bg": "^0.0.8",
@@ -80,9 +82,9 @@
     "react-dom": "^0.14.0",
     "react-helmet": "^2.1.1",
     "react-intl": "^2.0.0-pr-1",
-    "react-native": "^0.17.0",
+    "react-native": "^0.18.0",
     "react-native-browser-polyfill": "^0.1.1",
-    "react-native-side-menu": "^0.17.0",
+    "react-native-side-menu": "^0.18.0",
     "react-pure-render": "^1.0.1",
     "react-redux": "^4.0.6",
     "react-router": "^2.0.0-rc5",
@@ -93,7 +95,6 @@
     "redux-logger": "^2.1.1",
     "redux-promise-middleware": "^2.3.2",
     "redux-simple-router": "https://github.com/langpavel/redux-simple-router.git",
-    "redux-storage": "^1.2.4",
     "regenerator": "^0.8.42",
     "reselect": "^2.0.1",
     "run-sequence": "^1.0.2",

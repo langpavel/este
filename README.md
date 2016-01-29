@@ -9,13 +9,6 @@
 
 > Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), use laser focused [libraries](https://github.com/este/este#libraries) and design patterns instead.
 
-## Prerequisites
-
-- [node.js](http://nodejs.org) (Node 5 with npm 3 is required).
-- [gulp](http://gulpjs.com/) (`npm install -g gulp`)
-
-If you are using different node versions on your machine, use [nvm](https://github.com/creationix/nvm) to manage them.
-
 ## Techniques
 
 - Truly universal architecture
@@ -48,7 +41,14 @@ If you are using different node versions on your machine, use [nvm](https://gith
 - [gulp](http://gulpjs.com/) For cross platform scripting.
 - And much more. Check source code.
 
-## Installing
+## Prerequisites
+
+- [node.js](http://nodejs.org) (Node 5 with npm 3 is required).
+- [gulp](http://gulpjs.com/) (`npm install -g gulp`)
+
+If you are using different node versions on your machine, use [nvm](https://github.com/creationix/nvm) to manage them.
+
+## Create App
 
 ```shell
 git clone https://github.com/este/este.git este-app
@@ -64,7 +64,6 @@ npm install
 
 React Native: [facebook.github.io/react-native/docs/getting-started.html](https://facebook.github.io/react-native/docs/getting-started.html)
 
-
 ## Dev Tasks
 
 - `gulp` run web app in development mode
@@ -77,7 +76,7 @@ React Native: [facebook.github.io/react-native/docs/getting-started.html](https:
 
 - `gulp build -p` build app for production, for example for [Heroku](https://dashboard.heroku.com/)
 - `npm test` run all checks and tests
-- `node src/server` start app, remember to set NODE_ENV=production
+- `node src/server` start app, remember to set NODE_ENV and SERVER_URL
 - `gulp to-html` render app to HTML for static hosting like [Firebase](https://www.firebase.com/features.html#features-hosting)
 
 

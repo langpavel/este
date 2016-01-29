@@ -1,17 +1,16 @@
-import isomorphicFetch from 'isomorphic-fetch';
 import URI from 'urijs';
+import isomorphicFetch from 'isomorphic-fetch';
 
-function ensureAbsoluteUrl(webAddr, input) {
+function ensureServerUrl(serverUrl, input) {
   if (typeof input !== 'string') return input;
   if (URI(input).is('absolute')) return input;
-  return URI(webAddr + input).normalize().toString();
+  return URI(serverUrl + input).normalize().toString();
 }
 
-export default function createFetch(webAddr) {
-  // Wrapper over isomorphicFetch making relative urls absolute. We don't want
-  // hardcode fetch urls since they are different when app is deployed or not.
-  return function fetch(input, init) {
-    input = ensureAbsoluteUrl(webAddr, input);
+// Simple wrapper making isomorphic-fetch universal.
+export default function createFetch(serverUrl) {
+  return (input, init) => {
+    input = ensureServerUrl(serverUrl, input);
     return isomorphicFetch(input, init);
   };
 }

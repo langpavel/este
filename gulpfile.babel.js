@@ -16,15 +16,14 @@ const args = yargs
   .alias('p', 'production')
   .argv;
 
-const runEslint = () => {
-  return gulp.src([
+const runEslint = () =>
+  gulp.src([
     'gulpfile.babel.js',
     'src/**/*.js',
     'webpack/*.js'
   ])
   .pipe(eslint())
   .pipe(eslint.format());
-};
 
 gulp.task('env', () => {
   process.env.NODE_ENV = args.production ? 'production' : 'development';
@@ -35,14 +34,10 @@ gulp.task('clean', () => del('build/*'));
 gulp.task('build-webpack', ['env'], webpackBuild);
 gulp.task('build', ['build-webpack']);
 
-gulp.task('eslint', () => {
-  return runEslint();
-});
+gulp.task('eslint', () => runEslint());
 
-gulp.task('eslint-ci', () => {
-  // Exit process with an error code (1) on lint error for CI build.
-  return runEslint().pipe(eslint.failAfterError());
-});
+// Exit process with an error code (1) on lint error for CI build.
+gulp.task('eslint-ci', () => runEslint().pipe(eslint.failAfterError()));
 
 gulp.task('mocha', () => {
   mochaRunCreator('process')();
@@ -144,15 +139,33 @@ gulp.task('to-html', done => {
 
 // React Native
 
+// Various fixes for react-native issues. Must be called after npm install.
+gulp.task('fix-react-native', done => {
+  runSequence('fix-native-babelrc-files', 'fix-native-fbjs', done);
+});
+
+// https://github.com/facebook/react-native/issues/4062#issuecomment-164598155
+gulp.task('fix-native-babelrc-files', () =>
+  del(['node_modules/**/.babelrc', '!node_modules/react-native/**'])
+);
+
+// https://github.com/facebook/react-native/issues/5467#issuecomment-173989493
+// Should be fixed in RN 0.20.
+gulp.task('fix-native-fbjs', () =>
+  del(['node_modules/**/fbjs', '!node_modules/fbjs'])
+);
+
+// Tasks for issues seem to be already fixed.
+
 // Fix for custom .babelrc cache issue.
 // https://github.com/facebook/react-native/issues/1924#issuecomment-120170512
 gulp.task('clear-react-packager-cache', () => {
   // Clear react-packager cache
   const tempDir = os.tmpdir();
 
-  const cacheFiles = fs.readdirSync(tempDir).filter(fileName => {
-    return fileName.indexOf('react-packager-cache') === 0;
-  });
+  const cacheFiles = fs.readdirSync(tempDir).filter(
+    fileName => fileName.indexOf('react-packager-cache') === 0
+  );
 
   cacheFiles.forEach(cacheFile => {
     const cacheFilePath = path.join(tempDir, cacheFile);
@@ -163,10 +176,4 @@ gulp.task('clear-react-packager-cache', () => {
   if (!cacheFiles.length) {
     console.log('No cache files found!');
   }
-});
-
-// Must be called after npm install.
-// https://github.com/facebook/react-native/issues/4062#issuecomment-164598155
-gulp.task('remove-babelrc-files', () => {
-  return del(['node_modules/**/.babelrc', '!node_modules/react-native/**']);
 });

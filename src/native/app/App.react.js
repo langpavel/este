@@ -1,4 +1,4 @@
-import Component from '../components/Component.react';
+import Component from 'react-pure-render/component';
 import Header from './Header.react';
 import Menu from './Menu.react';
 import React, {Navigator, PropTypes, StatusBarIOS, View} from 'react-native';
@@ -33,9 +33,6 @@ class App extends Component {
     this.navigator = component;
   }
 
-  // TODO: Fluxify routing and make it universal with redux-router.
-  // Store current route in storage.
-  // https://github.com/rackt/redux-router/issues/63
   onRouteChange(route) {
     const {actions} = this.props;
     this.navigator.replace(routes[route]);

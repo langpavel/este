@@ -11,28 +11,24 @@ const BROWSER_DEVELOPMENT =
   process.env.NODE_ENV !== 'production' &&
   process.env.IS_BROWSER;
 
-// TODO: Add example for browser/native redux-storage.
-// import storage from 'redux-storage';
-export default function configureStore({deps, /* engine, */ initialState, history}) {
-  // Server address is passed in environment var WEB_ADDR defaulted to
-  // 'http://localhost:8000' for mobile device or '' for browser/server
-  // platforms (e.g. treat as relative URL to current page).
-  const webAddr = process.env.WEB_ADDR ||
-    (initialState.device.isMobile ? 'http://localhost:8000' : '');
+// Remember to set SERVER_URL for deployment.
+const SERVER_URL = process.env.SERVER_URL ||
+  (process.env.IS_BROWSER ? '' : 'http://localhost:8000');
+
+export default function configureStore({deps, initialState, history}) {
 
   // Este dependency injection middleware. So simple that we don't need a lib.
   // It's like mixed redux-thunk and redux-inject.
-  const injectMiddleware = deps => store => next => action => {
-    return next(typeof action === 'function'
+  const injectMiddleware = deps => store => next => action =>
+    next(typeof action === 'function'
       ? action({...deps, store})
       : action
     );
-  };
 
   const middleware = [
     injectMiddleware({
       ...deps,
-      fetch: createFetch(webAddr),
+      fetch: createFetch(SERVER_URL),
       getUid: () => shortid.generate(),
       now: () => Date.now(),
       validate
@@ -47,16 +43,6 @@ export default function configureStore({deps, /* engine, */ initialState, histor
     historyMiddleware = syncHistory(history);
     middleware.push(historyMiddleware);
   }
-
-  // TODO: Add redux-storage example.
-  // if (engine) {
-  //   // The order of decorators is important.
-  //   engine = storage.decorators.filter(engine, [
-  //     ['todos']
-  //   ]);
-  //   engine = storage.decorators.debounce(engine, 1500);
-  //   middleware.push(storage.createMiddleware(engine));
-  // }
 
   if (BROWSER_DEVELOPMENT) {
     const logger = createLogger({
