@@ -1,4 +1,5 @@
 import * as authActions from '../auth/actions';
+import * as fieldsActions from '../fields/actions';
 import * as todosActions from '../todos/actions';
 import * as uiActions from '../ui/actions';
 import {routeActions} from 'react-router-redux';
@@ -8,6 +9,7 @@ import {bindActionCreators} from 'redux';
 const actions = [
   routeActions,
   authActions,
+  fieldsActions,
   todosActions,
   uiActions
 ];
