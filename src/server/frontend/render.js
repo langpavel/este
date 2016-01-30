@@ -40,7 +40,8 @@ const getScriptHtml = (state, headers, hostname, appJsFilename) =>
   // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
   // Note how we use cdn.polyfill.io, en is default, but can be changed later.
   `
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
+    <script src="/intl/dist/Intl.min.js"></script>
+    <script src="/intl/locale-data/jsonp/en-US.js"></script>
     <script>
       window.__INITIAL_STATE__ = ${serialize(state)};
     </script>
@@ -86,7 +87,6 @@ export default function render(req, res, next) {
   // store.dispatch method.
 
   const routes = createRoutes(() => store.getState());
-  const location = createMemoryHistory().createLocation(req.url);
 
   match({routes, location}, async (error, redirectLocation, renderProps) => {
 

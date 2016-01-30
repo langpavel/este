@@ -10,7 +10,7 @@ import todos from '../todos/reducer';
 import ui from '../ui/reducer';
 import users from '../users/reducer';
 import explorer from '../explorer/reducer';
-import {routeReducer as routing} from 'redux-simple-router';
+import {routeReducer as routing} from 'react-router-redux';
 
 const appReducer = combineReducers({
   auth,

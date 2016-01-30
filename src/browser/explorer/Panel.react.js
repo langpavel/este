@@ -1,6 +1,6 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
-import fetch from '../components/fetch';
+import fetch from '../../common/components/fetch';
 import {fetchDir} from '../../common/explorer/actions';
 import {pathToStorePath} from '../../common/explorer/utils';
 import Entry from './Entry.react';

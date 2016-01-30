@@ -20,8 +20,7 @@ export default function fetch(...actions) {
     // For client side fetching.
     componentDidMount() {
       const {store: {dispatch}} = this.context;
-      const {location, params} = this.props;
-      actions.forEach(action => dispatch(action({location, params})));
+      actions.forEach(action => dispatch(action(this.props)));
     }
 
     render() {

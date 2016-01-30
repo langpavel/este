@@ -5,7 +5,7 @@ import promiseMiddleware from 'redux-promise-middleware';
 import shortid from 'shortid';
 import validate from './validate';
 import {applyMiddleware, compose, createStore} from 'redux';
-import {syncHistory} from 'redux-simple-router';
+import {syncHistory} from 'react-router-redux';
 
 const BROWSER_DEVELOPMENT =
   process.env.NODE_ENV !== 'production' &&
@@ -38,10 +38,10 @@ export default function configureStore({deps, initialState, history}) {
     })
   ];
 
-  let historyMiddleware;
+  let reduxRouterMiddleware;
   if (history) {
-    historyMiddleware = syncHistory(history);
-    middleware.push(historyMiddleware);
+    reduxRouterMiddleware = syncHistory(history);
+    middleware.push(reduxRouterMiddleware);
   }
 
   if (BROWSER_DEVELOPMENT) {
@@ -63,8 +63,8 @@ export default function configureStore({deps, initialState, history}) {
     : applyMiddleware(...middleware);
   const store = createReduxStore(createStore)(appReducer, initialState);
 
-  if (historyMiddleware) {
-    historyMiddleware.syncHistoryToStore(store);
+  if (reduxRouterMiddleware) {
+    reduxRouterMiddleware.listenForReplays(store);
   }
 
   // Enable hot reload where available.

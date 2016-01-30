@@ -16,7 +16,7 @@ export default function createRoutes(getState) {
     const loggedInUser = getState().users.viewer;
     if (!loggedInUser) {
       const nextPath = `${nextState.location.pathname}${nextState.location.search}`;
-      replace({statusCode: 307}, '/login?' + nextPath);
+      replace('/login?' + nextPath);
     }
   };
 

@@ -18,8 +18,8 @@ app.use('/assets/img', express.static('assets/img', {maxAge: '200d'}));
 app.use('/_assets', express.static('build', {maxAge: '200d'}));
 
 // Intl.
-app.use('/node_modules/intl/dist', express.static('node_modules/intl/dist'));
-app.use('/node_modules/intl/locale-data', express.static('node_modules/intl/locale-data'));
+app.use('/intl/dist', express.static('node_modules/intl/dist'));
+app.use('/intl/locale-data', express.static('node_modules/intl/locale-data'));
 
 app.use(device.capture());
 app.get('*', render);

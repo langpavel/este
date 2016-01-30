@@ -1,7 +1,7 @@
 import * as authActions from '../auth/actions';
 import * as todosActions from '../todos/actions';
 import * as uiActions from '../ui/actions';
-import {routeActions} from 'redux-simple-router';
+import {routeActions} from 'react-router-redux';
 import {Map} from 'immutable';
 import {bindActionCreators} from 'redux';
 
