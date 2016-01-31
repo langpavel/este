@@ -10,16 +10,12 @@ const app = express();
 app.use(esteMiddleware());
 app.use(compression());
 
-app.use(favicon('assets/img/favicon.ico'));
-
-// Serve the static assets. We can cache them as they include hashes.
-// express.static is relative to the directory where you launch your node process
-app.use('/assets/img', express.static('assets/img', {maxAge: '200d'}));
-app.use('/_assets', express.static('build', {maxAge: '200d'}));
+app.use(favicon(__dirname + '/../../../static/favicon.ico'));
 
 // Intl.
-app.use('/intl/dist', express.static('node_modules/intl/dist'));
-app.use('/intl/locale-data', express.static('node_modules/intl/locale-data'));
+app.use('/intl', express.static(__dirname + '/../../../node_modules/intl/dist'));
+app.use('/intl/locale-data', express.static(__dirname + '/../../../node_modules/intl/locale-data'));
+app.use('/', express.static(__dirname + '/../../../static', {maxAge: '1d'}));
 
 app.use(device.capture());
 app.get('*', render);

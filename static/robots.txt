@@ -1,0 +1,4 @@
+User-agent: *
+Host: palivo-rychnov.cz
+Allow: /
+Sitemap: http://palivo-rychnov.cz/sitemap.xml

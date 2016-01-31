@@ -89,8 +89,10 @@ export default function render(req, res, next) {
 
   match({routes, location}, async (error, redirectLocation, renderProps) => {
 
-    if (redirectLocation) {
-      res.redirect(303, redirectLocation.pathname + redirectLocation.search);
+    if (redirectLocation && (redirectLocation.pathname !== location.pathname)) {
+      res.redirect(
+        (redirectLocation.state && redirectLocation.state.statusCode) || 303,
+        redirectLocation.pathname + redirectLocation.search);
       return;
     }
 
@@ -104,9 +106,13 @@ export default function render(req, res, next) {
       const html = renderPage(store, renderProps, req);
       // renderProps are always defined with * route.
       // https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md
-      const status = renderProps.routes.some(route => route.path === '*')
-        ? 404
-        : 200;
+      let status = 200;
+
+      if (redirectLocation && redirectLocation.state && redirectLocation.state.statusCode)
+        status = redirectLocation.state.statusCode;
+      else if (renderProps.routes.some(route => route.path === '*'))
+        status = 404;
+
       res.status(status).send(html);
     } catch (e) {
       next(e);
