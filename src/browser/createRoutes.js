@@ -2,7 +2,6 @@ import App from './app/App.react';
 import Auth from './auth/Page.react';
 import Home from './home/Page.react';
 import Me from './me/Page.react';
-import Explorer from './explorer/Page.react';
 import NotFound from './notfound/Page.react';
 import Profile from './me/Profile.react';
 import React from 'react';
@@ -15,8 +14,9 @@ export default function createRoutes(getState) {
   const requireAuth = (nextState, replace) => {
     const loggedInUser = getState().users.viewer;
     if (!loggedInUser) {
-      const nextPath = `${nextState.location.pathname}${nextState.location.search}`;
-      replace('/login?' + nextPath);
+      replace(
+        `/login?${nextState.location.pathname}${nextState.location.search}`
+      );
     }
   };
 
@@ -28,7 +28,6 @@ export default function createRoutes(getState) {
         <Route component={Profile} path="profile" />
         <Route component={Settings} path="settings" />
       </Route>
-      <Route component={Explorer} onEnter={requireAuth} path="explorer" />
       <Route component={Todos} path="todos" />
       <Route component={NotFound} path="*" />
     </Route>
