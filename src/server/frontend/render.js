@@ -39,7 +39,8 @@ const getScriptHtml = (state, headers, hostname, appJsFilename) =>
   // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
   // Note how we use cdn.polyfill.io, en is default, but can be changed later.
   `
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
+    <script src="/intl/Intl.min.js"></script>
+    <script src="/intl/locale-data/jsonp/en-US.js"></script>
     <script>
       window.__INITIAL_STATE__ = ${serialize(state)};
     </script>
@@ -88,8 +89,10 @@ export default function render(req, res, next) {
 
   match({routes, location}, async (error, redirectLocation, renderProps) => {
 
-    if (redirectLocation) {
-      res.redirect(303, redirectLocation.pathname + redirectLocation.search);
+    if (redirectLocation && (redirectLocation.pathname !== location.pathname)) {
+      res.redirect(
+        (redirectLocation.state && redirectLocation.state.statusCode) || 303,
+        redirectLocation.pathname + redirectLocation.search);
       return;
     }
 
@@ -103,9 +106,13 @@ export default function render(req, res, next) {
       const html = renderPage(store, renderProps, req);
       // renderProps are always defined with * route.
       // https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md
-      const status = renderProps.routes.some(route => route.path === '*')
-        ? 404
-        : 200;
+      let status = 200;
+
+      if (redirectLocation && redirectLocation.state && redirectLocation.state.statusCode)
+        status = redirectLocation.state.statusCode;
+      else if (renderProps.routes.some(route => route.path === '*'))
+        status = 404;
+
       res.status(status).send(html);
     } catch (e) {
       next(e);

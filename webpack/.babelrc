@@ -1,4 +1,4 @@
 {
   "presets": ["es2015-node5"],
-  "plugins": ["add-module-exports"]
+  "plugins": ["add-module-exports", "babel-plugin-transform-decorators-legacy"]
 }
