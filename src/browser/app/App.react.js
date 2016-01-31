@@ -30,9 +30,9 @@ class App extends Component {
           ]}
           meta={[{
             name: 'description',
-            content: 'Dev stack and starter kit for functional and universal React web apps'
+            content: 'Server Administrator'
           }]}
-          titleTemplate="%s - Este.js"
+          titleTemplate="%s - ServerAdmin"
         />
         {/* Pathname enforces rerender so activeClassName is updated. */}
         <Header msg={msg} pathname={pathname} viewer={viewer} />

@@ -10,6 +10,7 @@ import intl from '../intl/reducer';
 import todos from '../todos/reducer';
 import ui from '../ui/reducer';
 import users from '../users/reducer';
+import explorer from '../explorer/reducer';
 import {routeReducer as routing} from 'react-router-redux';
 
 const appReducer = combineReducers({
@@ -20,7 +21,8 @@ const appReducer = combineReducers({
   routing,
   todos,
   ui,
-  users
+  users,
+  explorer
 });
 
 export default appReducer;
