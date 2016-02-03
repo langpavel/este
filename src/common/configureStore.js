@@ -35,8 +35,10 @@ export default function configureStore({deps, initialState, history}) {
     })
   ];
 
+  let reduxRouterMiddleware = null
   if (history) {
-    middleware.push(syncHistory(history));
+    reduxRouterMiddleware = syncHistory(history);
+    middleware.push(reduxRouterMiddleware);
   }
 
   // Enable logger only for browser and React Native development.
@@ -62,6 +64,10 @@ export default function configureStore({deps, initialState, history}) {
     ? compose(applyMiddleware(...middleware), window.devToolsExtension())
     : applyMiddleware(...middleware);
   const store = createReduxStore(createStore)(appReducer, initialState);
+
+  if (enableDevToolsExtension && reduxRouterMiddleware) {
+    reduxRouterMiddleware.listenForReplays(store);
+  }
 
   // Enable hot reload where available.
   if (module.hot) {
