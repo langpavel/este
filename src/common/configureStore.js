@@ -7,14 +7,6 @@ import validate from './validate';
 import {applyMiddleware, compose, createStore} from 'redux';
 import {syncHistory} from 'react-router-redux';
 
-const BROWSER_DEVELOPMENT =
-  process.env.NODE_ENV !== 'production' &&
-  process.env.IS_BROWSER;
-
-// Remember to set SERVER_URL for deployment.
-const SERVER_URL = process.env.SERVER_URL ||
-  (process.env.IS_BROWSER ? '' : 'http://localhost:8000');
-
 export default function configureStore({deps, initialState, history}) {
 
   // Este dependency injection middleware. So simple that we don't need a lib.
@@ -25,10 +17,15 @@ export default function configureStore({deps, initialState, history}) {
       : action
     );
 
+  // Remember to set SERVER_URL for deploy.
+  const serverUrl = process.env.SERVER_URL ||
+    // Browser is ok with relative url. Server and React Native need absolute.
+    (process.env.IS_BROWSER ? '' : 'http://localhost:8000');
+
   const middleware = [
     injectMiddleware({
       ...deps,
-      fetch: createFetch(SERVER_URL),
+      fetch: createFetch(serverUrl),
       getUid: () => shortid.generate(),
       now: () => Date.now(),
       validate
@@ -38,34 +35,33 @@ export default function configureStore({deps, initialState, history}) {
     })
   ];
 
-  let reduxRouterMiddleware;
   if (history) {
-    reduxRouterMiddleware = syncHistory(history);
-    middleware.push(reduxRouterMiddleware);
+    middleware.push(syncHistory(history));
   }
 
-  if (BROWSER_DEVELOPMENT) {
+  // Enable logger only for browser and React Native development.
+  const enableLogger = process.env.NODE_ENV !== 'production' &&
+    (process.env.IS_BROWSER || process.env.IS_REACT_NATIVE);
+
+  if (enableLogger) {
     const logger = createLogger({
-      // Immutable introspection:
-      // For Chrome 47+ there is custom formatter in browser/devTool.js.
-      // Check Enable Custom Formatters option in Developer Tools/
-      // Settings/General/Console.
-      // For Firefox there are extensions too.
-      // stateTransformer: state => JSON.parse(JSON.stringify(state)),
-      collapsed: true
+      collapsed: true,
+      // Convert immutable to JSON.
+      // stateTransformer: state => JSON.parse(JSON.stringify(state))
     });
     // Logger must be the last middleware in chain.
     middleware.push(logger);
   }
 
-  const createReduxStore = (BROWSER_DEVELOPMENT && window.devToolsExtension)
+  const enableDevToolsExtension =
+    process.env.NODE_ENV !== 'production' &&
+    process.env.IS_BROWSER &&
+    window.devToolsExtension;
+
+  const createReduxStore = enableDevToolsExtension
     ? compose(applyMiddleware(...middleware), window.devToolsExtension())
     : applyMiddleware(...middleware);
   const store = createReduxStore(createStore)(appReducer, initialState);
-
-  if (reduxRouterMiddleware) {
-    reduxRouterMiddleware.listenForReplays(store);
-  }
 
   // Enable hot reload where available.
   if (module.hot) {
