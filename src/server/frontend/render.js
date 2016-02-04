@@ -10,6 +10,7 @@ import {IntlProvider} from 'react-intl';
 import {Provider} from 'react-redux';
 import {RouterContext, match} from 'react-router';
 import createMemoryHistory from 'react-router/lib/createMemoryHistory';
+import {setServer} from '../../common/server/actions';
 
 const fetchComponentDataAsync = async (dispatch, renderProps) => {
   const {components, location, params} = renderProps;
@@ -81,6 +82,11 @@ export default function render(req, res, next) {
   const history = createMemoryHistory();
   const location = history.createLocation(req.url);
   const store = configureStore({initialState, history});
+
+  store.dispatch(setServer({
+    protocol: req.protocol,
+    hostname: req.hostname
+  }));
 
   // Fetch logged in user here because routes may need it. Remember we can use
   // store.dispatch method.

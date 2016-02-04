@@ -7,6 +7,7 @@ import auth from '../auth/reducer';
 import device from '../device/reducer';
 import fields from '../fields/reducer';
 import intl from '../intl/reducer';
+import server from '../server/reducer';
 import todos from '../todos/reducer';
 import ui from '../ui/reducer';
 import users from '../users/reducer';
@@ -17,6 +18,7 @@ const appReducer = combineReducers({
   device,
   fields,
   intl,
+  server,
   routing,
   todos,
   ui,
