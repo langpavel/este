@@ -1,5 +1,5 @@
 import * as actions from './actions';
-import {Record, List} from 'immutable';
+import {Record} from 'immutable';
 
 class ServerRecord extends Record({
   protocol: 'http',

@@ -14,9 +14,13 @@ export default function createRoutes(getState) {
   const requireAuth = (nextState, replace) => {
     const loggedInUser = getState().users.viewer;
     if (!loggedInUser) {
-      replace(
-        `/login?${nextState.location.pathname}${nextState.location.search}`
-      );
+      replace({
+        pathname: '/login',
+        query: {
+          _p: nextState.location.pathname,
+          _q: nextState.location.search
+        }
+      });
     }
   };
 

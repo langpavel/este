@@ -35,7 +35,7 @@ export default function configureStore({deps, initialState, history}) {
     })
   ];
 
-  let reduxRouterMiddleware = null
+  let reduxRouterMiddleware = null;
   if (history) {
     reduxRouterMiddleware = syncHistory(history);
     middleware.push(reduxRouterMiddleware);

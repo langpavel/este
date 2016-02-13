@@ -1,7 +1,12 @@
 import Component from 'react-pure-render/component';
 import React, {PropTypes} from 'react';
 import {IndexLink, Link} from 'react-router';
+import {connect} from 'react-redux';
 
+@connect(state => ({
+  msg: state.intl.msg.app.links,
+  viewer: state.users.viewer
+}))
 export default class Header extends Component {
 
   static propTypes = {
@@ -11,7 +16,7 @@ export default class Header extends Component {
   };
 
   render() {
-    const {msg: {app: {links: msg}}, viewer} = this.props;
+    const {msg, viewer} = this.props;
 
     return (
       <nav>
