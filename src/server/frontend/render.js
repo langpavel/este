@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Helmet from 'react-helmet';
 import Html from './Html.react';
 import React from 'react';
@@ -15,9 +16,16 @@ import {setServer} from '../../common/server/actions';
 const fetchComponentDataAsync = async (dispatch, renderProps) => {
   const {components, location, params} = renderProps;
   const promises = components
-    .reduce((actions, component) =>
-      actions.concat(component.fetchActions || [])
-    , [])
+    .reduce((actions, component) => {
+      if (typeof component === 'function') {
+        actions = actions.concat(component.fetchActions || []);
+      } else {
+        Object.keys(component).forEach(c => {
+          actions = actions.concat(component[c].fetchActions || []);
+        });
+      }
+      return actions;
+    }, [])
     .map(action =>
       // Server side fetching can use only router location and params props.
       // There is no easy way how to support custom component props.

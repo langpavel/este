@@ -119,7 +119,7 @@ gulp.task('to-html', done => {
 
   runSequence('clean', 'build', () => {
     const proc = require('child_process').spawn('node', ['./src/server']);
-    proc.stderr.on('data', (data) => console.log(data.toString()));
+    proc.stderr.on('data', data => console.log(data.toString()));
     proc.stdout.on('data', async data => {
       data = data.toString();
       if (data.indexOf('Server started') === -1) return;
@@ -145,12 +145,13 @@ gulp.task('fix-react-native', done => {
 });
 
 // https://github.com/facebook/react-native/issues/4062#issuecomment-164598155
+// Still broken in RN 0.20. Remove fbjs from package.json after fix.
 gulp.task('fix-native-babelrc-files', () =>
   del(['node_modules/**/.babelrc', '!node_modules/react-native/**'])
 );
 
 // https://github.com/facebook/react-native/issues/5467#issuecomment-173989493
-// Should be fixed in RN 0.20.
+// Still broken in RN 0.20. Remove fbjs from package.json after fix.
 gulp.task('fix-native-fbjs', () =>
   del(['node_modules/**/fbjs', '!node_modules/fbjs'])
 );
@@ -176,4 +177,19 @@ gulp.task('clear-react-packager-cache', () => {
   if (!cacheFiles.length) {
     console.log('No cache files found!');
   }
+});
+
+gulp.task('bare', () => {
+  console.log(`
+    If you want to have bare Este without examples, you have to it manually now.
+
+    Here is a quick checklist:
+      - remove /src/browser/todos, /src/common/todos, /src/native/todos dirs
+      - remove todos reducer from /src/common/app/reducer.js
+      - remove todos messages from /src/common/intl/messages/en.js
+      - remove todos routes from /src/browser/createRoutes.js
+      - remove link from /src/browser/app/Header.react.js
+
+    Yeah, it's that easy.
+  `);
 });

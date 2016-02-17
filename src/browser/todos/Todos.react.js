@@ -13,6 +13,16 @@ class Todos extends Component {
     todos: PropTypes.object.isRequired
   };
 
+  // Example how to measure component update.
+  // componentWillUpdate() {
+  //   this.start = Date.now();
+  // }
+
+  // componentDidUpdate() {
+  //   const total = Date.now() - this.start;
+  //   console.log(`[ESTE] Todos updated in ${total}ms`);
+  // }
+
   render() {
     const {deleteTodo, msg, todos} = this.props;
 
@@ -36,10 +46,6 @@ class Todos extends Component {
   }
 
 }
-
-// // To check render performance of connected component.
-// import logRenderTime from '../lib/logRenderTime';
-// Todos = logRenderTime(Todos)
 
 export default connect(state => ({
   msg: state.intl.msg.todos,
