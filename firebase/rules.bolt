@@ -1,0 +1,57 @@
+// An example of Firebase security and modeling language.
+// https://github.com/firebase/bolt/blob/master/docs/guide.md
+
+// Functions
+
+isSignedIn() { auth != null }
+isViewer(uid) { isSignedIn() && auth.uid == uid }
+
+// Types
+
+type ShortRequiredString extends String {
+  // Required form field with maxLength="100".
+  validate() { this.length > 0 && this.length <= 100 }
+}
+
+type LongString extends String {
+  validate() { this.length <= 1000 }
+}
+
+type HelloWorld {
+  createdAt: Number
+}
+
+type User {
+  authenticatedAt: Number,
+  displayName: LongString,
+  id: ShortRequiredString,
+  profileImageURL: LongString,
+  provider: LongString
+}
+
+type Email {
+  email: ShortRequiredString
+}
+
+// Paths
+
+path /hello-world is HelloWorld {
+  // Anyone can create, read, update. No one can delete.
+  create() { true }
+  read() { true }
+  update() { true }
+}
+
+path /users {
+  read() { true }
+  index() { ["authenticatedAt"] }
+}
+
+path /users/{uid} is User {
+  write() { isViewer(uid) }
+}
+
+path /users-emails/{uid} is Email {
+  read() { isViewer(uid) }
+  write() { isViewer(uid) }
+}

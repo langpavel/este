@@ -1,34 +1,59 @@
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
-import {IndexLink, Link} from 'react-router';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import linksMessages from '../../common/app/linksMessages';
+import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
 @connect(state => ({
-  msg: state.intl.msg.app.links,
   viewer: state.users.viewer
 }))
 export default class Header extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired,
-    pathname: PropTypes.string.isRequired,
     viewer: PropTypes.object
   };
 
   render() {
-    const {msg, viewer} = this.props;
+    const { viewer } = this.props;
 
     return (
-      <nav>
+      <header>
+        <h1>
+          <Link to="/">
+            <FormattedMessage {...linksMessages.home} />
+          </Link>
+        </h1>
         <ul>
-          <li><IndexLink activeClassName="active" to="/">{msg.home}</IndexLink></li>
-          <li><Link activeClassName="active" to="/todos">{msg.todos}</Link></li>
-          <li><Link activeClassName="active" to="/me">{msg.me}</Link></li>
+          <li>
+            <Link activeClassName="active" to="/firebase">
+              <FormattedMessage {...linksMessages.firebase} />
+            </Link>
+          </li>
+          <li>
+            <Link activeClassName="active" to="/todos">
+              <FormattedMessage {...linksMessages.todos} />
+            </Link>
+          </li>
+          <li>
+            <Link activeClassName="active" to="/intl">
+              <FormattedMessage {...linksMessages.intl} />
+            </Link>
+          </li>
+          <li>
+            <Link activeClassName="active" to="/me">
+              <FormattedMessage {...linksMessages.me} />
+            </Link>
+          </li>
           {!viewer &&
-            <li><Link activeClassName="active" to="/login">{msg.login}</Link></li>
+            <li>
+              <Link activeClassName="active" to="/login">
+                <FormattedMessage {...linksMessages.login} />
+              </Link>
+            </li>
           }
         </ul>
-      </nav>
+      </header>
     );
   }
 

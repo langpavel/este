@@ -3,35 +3,52 @@ import Component from 'react-pure-render/component';
 import Footer from './Footer.react';
 import Header from './Header.react';
 import Helmet from 'react-helmet';
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
+import start from '../../common/app/start';
+import { connect } from 'react-redux';
 
-export default class App extends Component {
+// v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
+const bootstrap4Metas = [
+  { charset: 'utf-8' },
+  {
+    name: 'viewport',
+    content: 'width=device-width, initial-scale=1, shrink-to-fit=no'
+  },
+  {
+    'http-equiv': 'x-ua-compatible',
+    content: 'ie=edge'
+  }
+];
+
+class App extends Component {
 
   static propTypes = {
     children: PropTypes.object.isRequired,
+    currentLocale: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired
   };
 
   render() {
-    const {children, location} = this.props;
+    const { children, currentLocale, location } = this.props;
 
     return (
-      // Pass data-pathname to allow route specific styling.
-      <div className="page" data-pathname={location.pathname}>
+      <div className="page">
         <Helmet
-          link={[
-            {rel: 'shortcut icon', href: '/favicon.ico'}
-          ]}
-          meta={[{
-            name: 'description',
-            content: 'Dev stack and starter kit for functional and universal React web apps'
-          }]}
+          htmlAttributes={{ lang: currentLocale }}
           titleTemplate="%s - Este.js"
+          meta={[
+            ...bootstrap4Metas,
+            {
+              name: 'description',
+              content: 'Dev stack and starter kit for functional and universal React apps'
+            }
+          ]}
+          link={[
+            { rel: 'shortcut icon', href: require('./favicon.ico') }
+          ]}
         />
-        <Header
-          // TODO: Use Redux router, then connect location.
-          pathname={location.pathname}
-        />
+        {/* Pass location to ensure header active links are updated. */}
+        <Header location={location} />
         {children}
         <Footer />
       </div>
@@ -39,3 +56,9 @@ export default class App extends Component {
   }
 
 }
+
+App = start(App);
+
+export default connect(state => ({
+  currentLocale: state.intl.currentLocale
+}))(App);

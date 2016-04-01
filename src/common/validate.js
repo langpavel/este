@@ -1,31 +1,18 @@
-import Validation from './lib/validation';
-import ValidationError from './lib/ValidationError';
-import {format} from './intl/format';
+import { Validation, ValidationError } from './lib/validation';
 
-// Localized validation.
-export default function validate({intl: {msg}}) {
+class AppValidation extends Validation {
 
-  class LocalizedValidation extends Validation {
-
-    getRequiredMessage(prop) {
-      return format(msg.auth.validation.required, {prop});
-    }
-
-    getEmailMessage(prop) {
-      return format(msg.auth.validation.email, {prop});
-    }
-
-    getSimplePasswordMessage(minLength) {
-      return format(msg.auth.validation.password, {minLength});
-    }
-
+  // That's how we can add custom validations.
+  superLongPassword() {
+    return this.validate((value, prop) => {
+      const minLength = 500;
+      if (value.length >= minLength) return;
+      throw new ValidationError('superLongPassword', { minLength, prop });
+    });
   }
 
-  const validate = (object) => new LocalizedValidation(object);
+}
 
-  validate.wrongPassword = prop =>
-    new ValidationError(msg.auth.form.wrongPassword, prop);
-
-  return validate;
-
+export default function validate(json) {
+  return new AppValidation(json);
 }

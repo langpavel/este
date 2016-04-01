@@ -1,36 +1,36 @@
 import * as todosActions from '../../common/todos/actions';
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import Todo from './Todo.react';
-import {connect} from 'react-redux';
+import todosMessages from '../../common/todos/todosMessages';
+import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
 
 // Container component.
-class Todos extends Component {
+export class Todos extends Component {
 
   static propTypes = {
     deleteTodo: PropTypes.func.isRequired,
-    msg: PropTypes.object.isRequired,
-    todos: PropTypes.object.isRequired
+    todos: PropTypes.object.isRequired,
+    toggleTodoCompleted: PropTypes.func.isRequired
   };
 
-  // Example how to measure component update.
+  // // Check render performance.
   // componentWillUpdate() {
   //   this.start = Date.now();
   // }
-
   // componentDidUpdate() {
-  //   const total = Date.now() - this.start;
-  //   console.log(`[ESTE] Todos updated in ${total}ms`);
+  //   console.log(`[ESTE] Todos updated in ${Date.now() - this.start}ms`);
   // }
 
   render() {
-    const {deleteTodo, msg, todos} = this.props;
+    const { deleteTodo, todos, toggleTodoCompleted } = this.props;
 
-    if (!todos.size)
-      return <p>{msg.empty}</p>;
+    if (!todos.size) {
+      return <p><FormattedMessage {...todosMessages.empty} /></p>;
+    }
 
-    // Big lists should be sorted in reducer.
-    const list = todos.toList().sortBy(item => item.createdAt);
+    const list = todos.toList().sortBy(item => item.createdAt).reverse();
 
     return (
       <ol className="todos">
@@ -38,6 +38,7 @@ class Todos extends Component {
           <Todo
             deleteTodo={deleteTodo}
             todo={todo}
+            toggleTodoCompleted={toggleTodoCompleted}
             key={todo.id}
           />
         )}
@@ -48,6 +49,5 @@ class Todos extends Component {
 }
 
 export default connect(state => ({
-  msg: state.intl.msg.todos,
   todos: state.todos.map
 }), todosActions)(Todos);

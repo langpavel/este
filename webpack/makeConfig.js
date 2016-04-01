@@ -16,16 +16,14 @@ const devtools = 'cheap-module-eval-source-map';
 
 const loaders = {
   css: '',
-  less: '!less-loader',
+  // Why not LESS or Stylus? The battle is over, let's focus on inline styles.
   scss: '!sass-loader',
-  sass: '!sass-loader?indentedSyntax',
-  styl: '!stylus-loader'
+  sass: '!sass-loader?indentedSyntax'
 };
 
 const serverIp = ip.address();
 
 export default function makeConfig(isDevelopment) {
-
   function stylesLoaders() {
     return Object.keys(loaders).map(ext => {
       const prefix = 'css-loader!postcss-loader';
@@ -65,7 +63,7 @@ export default function makeConfig(isDevelopment) {
         test: /\.(ttf|eot|woff(2)?)(\?[a-z0-9]+)?$/
       }, {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: constants.NODE_MODULES_DIR,
         loader: 'babel',
         query: {
           cacheDirectory: true,
@@ -78,6 +76,12 @@ export default function makeConfig(isDevelopment) {
           env: {
             development: {
               presets: ['react-hmre']
+            },
+            production: {
+              plugins: [
+                'transform-react-constant-elements',
+                'transform-react-inline-elements'
+              ]
             }
           }
         }
@@ -100,38 +104,42 @@ export default function makeConfig(isDevelopment) {
           'process.env': {
             IS_BROWSER: true, // Because webpack is used only for browser code.
             IS_REACT_NATIVE: false, // To strip off React Native code.
+            IS_SERVERLESS: JSON.stringify(process.env.IS_SERVERLESS || false),
             NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production'),
             SERVER_URL: JSON.stringify(process.env.SERVER_URL || '')
           }
         })
       ];
-      if (isDevelopment) plugins.push(
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
-        webpackIsomorphicToolsPlugin.development()
-      );
-      else plugins.push(
-        // Render styles into separate cacheable file to prevent FOUC and
-        // optimize for critical rendering path.
-        new ExtractTextPlugin('app-[hash].css', {
-          allChunks: true
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-          compress: {
-            screw_ie8: true, // eslint-disable-line camelcase
-            warnings: false // Because uglify reports irrelevant warnings.
-          }
-        }),
-        webpackIsomorphicToolsPlugin
-      );
+      if (isDevelopment) {
+        plugins.push(
+          new webpack.optimize.OccurenceOrderPlugin(),
+          new webpack.HotModuleReplacementPlugin(),
+          new webpack.NoErrorsPlugin(),
+          webpackIsomorphicToolsPlugin.development()
+        );
+      } else {
+        plugins.push(
+          // Render styles into separate cacheable file to prevent FOUC and
+          // optimize for critical rendering path.
+          new ExtractTextPlugin('app-[hash].css', {
+            allChunks: true
+          }),
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.OccurenceOrderPlugin(),
+          new webpack.optimize.UglifyJsPlugin({
+            compress: {
+              screw_ie8: true, // eslint-disable-line camelcase
+              warnings: false // Because uglify reports irrelevant warnings.
+            }
+          }),
+          webpackIsomorphicToolsPlugin
+        );
+      }
       return plugins;
     })(),
-    postcss: () => [autoprefixer({browsers: 'last 2 version'})],
+    postcss: () => [autoprefixer({ browsers: 'last 2 version' })],
     resolve: {
-      extensions: ['', '.js'],
+      extensions: ['', '.js'], // .json is ommited to ignore ./firebase.json
       modulesDirectories: ['src', 'node_modules'],
       root: constants.ABSOLUTE_BASE,
       alias: {
@@ -141,5 +149,4 @@ export default function makeConfig(isDevelopment) {
   };
 
   return config;
-
 }

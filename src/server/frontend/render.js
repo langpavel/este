@@ -6,50 +6,57 @@ import ReactDOMServer from 'react-dom/server';
 import config from '../config';
 import configureStore from '../../common/configureStore';
 import createRoutes from '../../browser/createRoutes';
+import loadMessages from '../intl/loadMessages';
 import serialize from 'serialize-javascript';
-import {IntlProvider} from 'react-intl';
-import {Provider} from 'react-redux';
-import {RouterContext, match} from 'react-router';
-import {createMemoryHistory} from 'react-router';
-import {setServer} from '../../common/server/actions';
+import { Provider } from 'react-redux';
+import { createMemoryHistory, match, RouterContext } from 'react-router';
+import { queryFirebaseServer } from '../../common/lib/redux-firebase/queryFirebase';
+import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 
-const fetchComponentDataAsync = async (dispatch, renderProps) => {
-  const {components, location, params} = renderProps;
-  const promises = components
-    .reduce((actions, component) => {
-      if (typeof component === 'function') {
-        actions = actions.concat(component.fetchActions || []);
-      } else {
-        Object.keys(component).forEach(c => {
-          actions = actions.concat(component[c].fetchActions || []);
-        });
-      }
-      return actions;
-    }, [])
-    .map(action =>
-      // Server side fetching can use only router location and params props.
-      // There is no easy way how to support custom component props.
-      dispatch(action({location, params})).payload.promise
-    );
-  await Promise.all(promises);
+const messages = loadMessages();
+const intlPolyfillFeatures = config.locales
+  .map(locale => `Intl.~locale.${locale}`)
+  .join();
+
+const getInitialState = req => {
+  const currentLocale = process.env.IS_SERVERLESS
+    ? config.defaultLocale
+    : req.acceptsLanguages(config.locales) || config.defaultLocale;
+  const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+  return {
+    config: {
+      appName: config.appName,
+      firebaseUrl: config.firebaseUrl
+    },
+    intl: {
+      currentLocale,
+      initialNow: Date.now(),
+      locales: config.locales,
+      messages
+    },
+    device: {
+      host: `${protocol}://${req.headers.host}`
+    }
+  };
 };
 
-const getAppHtml = (store, renderProps) =>
-  ReactDOMServer.renderToString(
+const renderApp = (store, renderProps) => {
+  const appHtml = ReactDOMServer.renderToString(
     <Provider store={store}>
-      <IntlProvider>
-        <RouterContext {...renderProps} />
-      </IntlProvider>
+      <RouterContext {...renderProps} />
     </Provider>
   );
+  return { appHtml, helmet: Helmet.rewind() };
+};
 
-const getScriptHtml = (state, headers, hostname, appJsFilename) =>
-  // Note how app state is serialized. JSON.stringify is anti-pattern.
+const renderScripts = (state, headers, hostname, appJsFilename) =>
   // https://github.com/yahoo/serialize-javascript#user-content-automatic-escaping-of-html-characters
-  // Note how we use cdn.polyfill.io, en is default, but can be changed later.
+  // https://github.com/andyearnshaw/Intl.js/#intljs-and-ft-polyfill-service
+  // TODO: Switch to CSP, https://github.com/este/este/pull/731
   `
-    <script src="/intl/Intl.min.js"></script>
-    <script src="/intl/locale-data/jsonp/en-US.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=${
+      intlPolyfillFeatures
+    }"></script>
     <script>
       window.__INITIAL_STATE__ = ${serialize(state)};
     </script>
@@ -58,21 +65,24 @@ const getScriptHtml = (state, headers, hostname, appJsFilename) =>
 
 const renderPage = (store, renderProps, req) => {
   const state = store.getState();
-  const {headers, hostname} = req;
-  const appHtml = getAppHtml(store, renderProps);
-  const helmet = Helmet.rewind();
+  // No server routing for server-less apps.
+  if (process.env.IS_SERVERLESS) {
+    delete state.routing;
+  }
+  const { headers, hostname } = req;
+  const { appHtml, helmet } = renderApp(store, renderProps);
   const {
-    styles: {app: appCssFilename},
-    javascript: {app: appJsFilename}
+    styles: { app: appCssFilename },
+    javascript: { app: appJsFilename }
   } = webpackIsomorphicTools.assets();
-  const scriptHtml = getScriptHtml(state, headers, hostname, appJsFilename);
+  const scriptsHtml = renderScripts(state, headers, hostname, appJsFilename);
   if (!config.isProduction) {
     webpackIsomorphicTools.refresh();
   }
   const docHtml = ReactDOMServer.renderToStaticMarkup(
     <Html
       appCssFilename={appCssFilename}
-      bodyHtml={`<div id="app">${appHtml}</div>${scriptHtml}`}
+      bodyHtml={`<div id="app">${appHtml}</div>${scriptsHtml}`}
       googleAnalyticsId={config.googleAnalyticsId}
       helmet={helmet}
       isProduction={config.isProduction}
@@ -82,51 +92,32 @@ const renderPage = (store, renderProps, req) => {
 };
 
 export default function render(req, res, next) {
-  const initialState = {
-    device: {
-      isMobile: ['phone', 'tablet'].indexOf(req.device.type) > -1
-    }
-  };
-  const history = createMemoryHistory();
-  const location = history.createLocation(req.url);
-  const store = configureStore({initialState, history});
+  const initialState = getInitialState(req);
+  const memoryHistory = createMemoryHistory(req.originalUrl);
+  const store = configureStore({
+    initialState,
+    platformMiddleware: [routerMiddleware(memoryHistory)]
+  });
+  const history = syncHistoryWithStore(memoryHistory, store);
+  const routes = createRoutes(store.getState);
+  const location = req.url;
 
-  store.dispatch(setServer({
-    protocol: req.protocol,
-    hostname: req.hostname
-  }));
-
-  // Fetch logged in user here because routes may need it. Remember we can use
-  // store.dispatch method.
-
-  const routes = createRoutes(() => store.getState());
-
-  match({routes, location}, async (error, redirectLocation, renderProps) => {
-
-    if (redirectLocation && (redirectLocation.pathname !== location.pathname)) {
-      res.redirect(
-        (redirectLocation.state && redirectLocation.state.statusCode) || 303,
-        redirectLocation.pathname + redirectLocation.search);
+  match({ history, routes, location }, async (error, redirectLocation, renderProps) => {
+    if (redirectLocation) {
+      res.redirect(301, redirectLocation.pathname + redirectLocation.search);
       return;
     }
-
     if (error) {
       next(error);
       return;
     }
-
     try {
-      await fetchComponentDataAsync(store.dispatch, renderProps);
+      if (!process.env.IS_SERVERLESS) {
+        await queryFirebaseServer(() => renderApp(store, renderProps));
+      }
       const html = renderPage(store, renderProps, req);
-      // renderProps are always defined with * route.
-      // https://github.com/rackt/react-router/blob/master/docs/guides/advanced/ServerRendering.md
-      let status = 200;
-
-      if (redirectLocation && redirectLocation.state && redirectLocation.state.statusCode)
-        status = redirectLocation.state.statusCode;
-      else if (renderProps.routes.some(route => route.path === '*'))
-        status = 404;
-
+      const status = renderProps.routes
+        .some(route => route.path === '*') ? 404 : 200;
       res.status(status).send(html);
     } catch (e) {
       next(e);

@@ -1,48 +1,56 @@
-<a href="https://learn-reactjs.com/"><img alt="Este.js" src="https://cloud.githubusercontent.com/assets/66249/6515265/b91f0fb8-c388-11e4-857e-c90902e0b7a1.png" width="200"></a>
+<img alt="Este.js" src="https://cloud.githubusercontent.com/assets/66249/6515265/b91f0fb8-c388-11e4-857e-c90902e0b7a1.png" width="200">
 
-[![Circle CI](https://circleci.com/gh/este/este.svg?style=svg)](https://circleci.com/gh/este/este)
+[![Circle CI](https://img.shields.io/circleci/project/este/este/master.svg)](https://circleci.com/gh/este/este)
 [![Join the chat at https://gitter.im/este/este](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/este/este)
 [![Dependency Status](https://david-dm.org/este/este.svg)](https://david-dm.org/este/este)
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![GitHub license](https://img.shields.io/github/license/este/este.svg)](https://github.com/este/este/blob/master/LICENSE)
+[![Deploy](https://img.shields.io/badge/%E2%86%91_Deploy_to-Heroku-7056bf.svg)](https://heroku.com/deploy)
 
 > Happily maintained dev stack and starter kit for React universal apps. One stack for browser, server, mobile.
 
 > Forget about [evil frameworks](http://tomasp.net/blog/2015/library-frameworks/), use laser focused [libraries](https://github.com/este/este#libraries) and design patterns instead.
-
-> Nejbližší **školení Este** se koná 18. února až 19. února v Praze - registrujte se zde [learn-reactjs.com](https://learn-reactjs.com/).
 
 ## Techniques
 
 - Truly universal architecture
   - code shared across platforms (browser, server, native mobile)
   - server side rendering
-  - universal data fetching via one higher order component
-  - prerender for static hosting
-- Functional architecture (immutability, hot reload, time traveling)
-- Test driven development ready
+  - universal data fetching
+  - an optional rendering to HTML files (for static hosting)
+  - universal internationalization with runtime language switching
+  - universal forms with universal validation (universal ftw, yeah)
+- Functional works (immutability, hot reload, time traveling)
+- Test driven development
 - Advanced performance with pure components
 - Well tuned dev stack
-- Universal forms with validation
+- Firebase Redux integration ([este.firebaseapp.com](https://este.firebaseapp.com))
+  - useful predefined actions
+  - email and facebook login
+  - declarative queryFirebase higher order component for Firebase imperative api
+- Este is monorepo, [read](https://github.com/babel/babel/blob/master/doc/design/monorepo.md) [why](http://danluu.com/monorepo/). 
 
 ## Libraries
 
-- [React](http://facebook.github.io/react/) and [React Native](https://facebook.github.io/react-native/) 
-- [Redux](http://rackt.github.io/redux/)
+- [react](http://facebook.github.io/react/) and [react native](https://facebook.github.io/react-native/) 
+- [redux](http://rackt.github.io/redux/)
 - [babeljs](https://babeljs.io/)
 - [immutablejs](http://facebook.github.io/immutable-js)
 - [react-router](https://github.com/rackt/react-router)
+- [react-router-redux](https://github.com/reactjs/react-router-redux)
+- [react-intl](https://github.com/yahoo/react-intl)
+- [redux-storage](https://github.com/michaelcontento/redux-storage)
 - [webpack](http://webpack.github.io/)
 - [expressjs](http://expressjs.com/)
 - [eslint](http://eslint.org/)
 - [formatjs](http://formatjs.io/) Universal internationalization.
-- [React Helmet](https://github.com/nfl/react-helmet) A document head manager for React.
+- [react-helmet](https://github.com/nfl/react-helmet) A document head manager for React.
 - [webpack-isomorphic-tools](https://github.com/halt-hammerzeit/webpack-isomorphic-tools)
 - [chriso/validator.js](https://github.com/chriso/validator.js) For simple yet powerfull Este sync/async validation.
 - [bluebird](https://github.com/petkaantonov/bluebird) Because it's better than native implementation.
 - [mochajs](https://mochajs.org/) The fun, simple, flexible JavaScript test framework.
-- LESS, SASS, Stylus, or plain CSS with [autoprefixer](https://github.com/postcss/autoprefixer)
+- SASS or plain CSS with [autoprefixer](https://github.com/postcss/autoprefixer)
 - [shortid](https://github.com/dylang/shortid) Short id generator. Url-friendly. Non-predictable.
-- [gulp](http://gulpjs.com/) For cross platform scripting.
+- [gulp](http://gulpjs.com/) Aren't NPM scripts better? [No](https://twitter.com/jaffathecake/status/700320306053935104).
 - And much more. Check source code.
 
 ## Prerequisites
@@ -71,10 +79,14 @@ React Native: [facebook.github.io/react-native/docs/getting-started.html](https:
 ## Dev Tasks
 
 - `gulp` run web app in development mode
+- `gulp ios` run iOS app in development mode
+- `gulp android` run Android app in development mode
 - `gulp -p` run web app in production mode
 - `gulp mocha` run mocha unit tests
 - `gulp mocha-watch` continuous test running for TDD
 - `gulp eslint` eslint
+- `gulp eslint --fix` fix fixable eslint issues
+- `gulp extractDefaultMessages` extract string messages for translation
 
 ## Production Tasks
 
@@ -82,7 +94,7 @@ React Native: [facebook.github.io/react-native/docs/getting-started.html](https:
 - `npm test` run all checks and tests
 - `node src/server` start app, remember to set NODE_ENV and SERVER_URL
 - `gulp to-html` render app to HTML for static hosting like [Firebase](https://www.firebase.com/features.html#features-hosting)
-
+- `gulp deploy` deploy app
 
 ## Documentation
 
@@ -109,7 +121,7 @@ Thanks to [Ryanlanciaux](http://ryanlanciaux.github.io/blog/2014/08/02/using-jes
 
 - To check current app state, just open browser console.
 - Install Redux devtools Chrome extension [zalmoxisus/redux-devtools-extension](https://github.com/zalmoxisus/redux-devtools-extension)
-- With functional programming ([SOLID: the next step is Functional](http://blog.ploeh.dk/2014/03/10/solid-the-next-step-is-functional)), we don't need DI containers. We can use plain old [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/). Check `injectDependencies` middleware in `configureStore`.
+- With functional programming ([SOLID: the next step is Functional](http://blog.ploeh.dk/2014/03/10/solid-the-next-step-is-functional)), we don't need DI containers. We can use plain old [Pure DI](http://blog.ploeh.dk/2014/06/10/pure-di/). Check `injectMiddleware` in `configureStore`.
 - Learn immutable.js, for example [Seq](https://github.com/facebook/immutable-js#lazy-seq). Handy even for native arrays and objects. For example, get object values: `Seq(RoomType).toSet().toJS()`
 - Recommended editors are [sublimetext](http://www.sublimetext.com/) ([tips](https://github.com/este/este/wiki/Recommended-Sublime-Text-3-settings)) and [atom.io](https://atom.io).
 
@@ -138,7 +150,6 @@ Just as regular React Native project created via `react-native init AwesomeProje
 ## Training
 - [learn-reactjs.com](http://www.learn-reactjs.com)
 - [javascript-skoleni.cz](http://javascript-skoleni.cz)
-- [DzejEs.cz](http://www.dzejes.cz) - czech articles about Este
 
 ## Notes
 

@@ -1,5 +1,4 @@
 import compression from 'compression';
-import device from 'express-device';
 import esteMiddleware from '../lib/esteMiddleware';
 import express from 'express';
 import favicon from 'serve-favicon';
@@ -12,13 +11,15 @@ app.use(compression());
 
 app.use(favicon(`${__dirname}/../../../static/favicon.ico`));
 
+// All assets must be handled via require syntax like this:
+// <img alt="50x50 placeholder" src={require('./50x50.png')} />
+app.use('/assets', express.static('build', { maxAge: '200d' }));
+
 // Intl.
 app.use('/intl', express.static(`${__dirname}/../../../node_modules/intl/dist`));
 app.use('/intl/locale-data', express.static(`${__dirname}/../../../node_modules/intl/locale-data`));
 app.use('/', express.static(`${__dirname}/../../../static`, {maxAge: '1d'}));
-app.use('/assets', express.static(`${__dirname}/../../../build`, {maxAge: '1d'}));
 
-app.use(device.capture());
 app.get('*', render);
 
 app.on('mount', () => {

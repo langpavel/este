@@ -1,11 +1,24 @@
+import * as authActions from '../../common/auth/actions';
 import Component from 'react-pure-render/component';
-import React, {PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { PropTypes } from 'react';
+import { FormattedMessage, defineMessages } from 'react-intl';
+import { connect } from 'react-redux';
+
+const messages = defineMessages({
+  logout: {
+    defaultMessage: 'Logout',
+    id: 'auth.logout'
+  }
+});
 
 class Logout extends Component {
 
   static propTypes = {
-    msg: PropTypes.object.isRequired
+    logout: PropTypes.func.isRequired
+  };
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -14,22 +27,22 @@ class Logout extends Component {
   }
 
   logout() {
-    // Always reload app on logout for security reasons.
-    location.href = '/';
+    const { logout } = this.props;
+    // Redirect user to root page before logout since logout recycles app state.
+    this.context.router.replace('/');
+    logout();
   }
 
   render() {
-    const {msg} = this.props;
-
     return (
       <div className="logout">
-        <button onClick={this.logout}>{msg.button}</button>
+        <button onClick={this.logout}>
+          <FormattedMessage {...messages.logout} />
+        </button>
       </div>
     );
   }
 
 }
 
-export default connect(state => ({
-  msg: state.intl.msg.auth.logout
-}))(Logout);
+export default connect(null, authActions)(Logout);
