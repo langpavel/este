@@ -38,7 +38,13 @@ function saveUserOnAuth(authData) {
     const user = mapAuthToUser(authData);
     user.authenticatedAt = firebase.constructor.ServerValue.TIMESTAMP;
     const { email } = user;
+    // Delete Facebook etc. user email for better security.
     delete user.email;
+    // But use it as displayName for users logged in via email, because that's
+    // the only info we have.
+    if (user.provider === 'password') {
+      user.displayName = email;
+    }
     // With Firebase multi-path updates, we can update values at multiple
     // locations at the same time. Powerful feature for data denormalization.
     const promise = firebase.update({
@@ -47,7 +53,7 @@ function saveUserOnAuth(authData) {
     });
     return {
       type: 'REDUX_FIREBASE_SAVE_USER_ON_AUTH',
-      payload: { promise }
+      payload: promise
     };
   };
 }
@@ -59,7 +65,7 @@ export function login(provider, fields) {
       : socialLogin(firebase, provider);
     return {
       type: 'REDUX_FIREBASE_LOGIN',
-      payload: { promise }
+      payload: promise
     };
   };
 }
@@ -76,24 +82,20 @@ export function resetPassword(email) {
     const promise = firebase.resetPassword({ email });
     return {
       type: 'REDUX_FIREBASE_RESET_PASSWORD',
-      payload: { promise }
+      payload: promise
     };
   };
 }
 
 export function signUp(fields) {
   return ({ firebase }) => {
-    // This is a beautiful example of async / await over plain promises.
-    // Note async function handles errors automatically.
-    async function getPromise() {
+    const getPromise = async () => {
       await firebase.createUser(fields);
       await firebase.authWithPassword(fields);
-    }
+    };
     return {
       type: 'REDUX_FIREBASE_SIGN_UP',
-      payload: {
-        promise: getPromise()
-      }
+      payload: getPromise()
     };
   };
 }
