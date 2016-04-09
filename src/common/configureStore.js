@@ -88,7 +88,7 @@ export default function configureStore(options) {
     const logger = createLogger({
       collapsed: true,
       // Convert immutable to JSON.
-      stateTransformer: state => JSON.parse(JSON.stringify(state))
+      // stateTransformer: state => JSON.parse(JSON.stringify(state))
     });
     middleware.push(logger);
   }

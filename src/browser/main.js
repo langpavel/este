@@ -20,6 +20,10 @@ import no from 'react-intl/locale-data/no';
 import pt from 'react-intl/locale-data/pt';
 import ro from 'react-intl/locale-data/ro';
 
+if (process.env.NODE_ENV !== 'production') {
+  require('./devTools');
+}
+
 // bluebirdjs.com/docs/why-bluebird.html
 window.Promise = Bluebird;
 // Warnings are useful for user code, but annoying for third party libraries.

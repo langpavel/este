@@ -5,3 +5,5 @@ import install from 'immutable-devtools';
 window.React = React;
 window.Immutable = Immutable;
 install(Immutable);
+
+console.log('DevTools loaded! :-)');
