@@ -44,7 +44,7 @@ class App extends Component {
             }
           ]}
           link={[
-            { rel: 'shortcut icon', href: require('./favicon.ico') }
+            { rel: 'shortcut icon', href: require('../../../static/favicon.ico') }
           ]}
         />
         {/* Pass location to ensure header active links are updated. */}
